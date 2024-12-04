@@ -14,21 +14,21 @@ app.listen(port,()=>{
 const articles=[
      {
         title:'articl1',
-        id:1234,
+        id:1,
         content:'this is an article it has some content',
         date:new Date()
 
      },
      {
         title:'example',
-        id:1232,
+        id:2,
         content:'this is an article it has some  example content',
         date:new Date()
 
      },
      {
         title:'another',
-        id:1234,
+        id:3,
         content:'this is an article it has some content',
         date:new Date()
 
@@ -38,7 +38,7 @@ const articles=[
 app.post('/articles',(req,res)=>{
     const {title,content,tags}=req.body;
     if(!title||!content){
-        return res.status(400).json({'Error:no content'});
+        return res.status(400).json({Error:'no content'});
     }
      const article={
         id:articles.length+1,
@@ -58,13 +58,31 @@ app.get('/search',(req,res)=>{
     const {keyword}=req.query;
     const temp=[];
     searcharticle.forEach((x)=>{
-        if(x.title.includes(keyword)){
+        const words=x.art.split(" ");
+        if(x.title==keyword){
             temp.push(x.art);
+        }else{
+            if(words.includes(keyword)){
+                temp.push(x.art);
+            }
         }
     
     });
-    return res.json({temp});
+    if(temp.length===0){
+        return res.status(400).json({Error:'keyword not found in any article'});
+    }
+    return res.status(201).json({temp});
 });
+
+app.get('/id',(req,res)=>{
+    const {rid}=req.query;
+    articles.forEach((val)=>{
+      if(val.id==rid){
+        return res.json({val})
+      }
+    })
+    return res.status(404).json({error:'id not found'})
+})
 
 
 
