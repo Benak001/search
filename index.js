@@ -58,7 +58,7 @@ app.get('/search',(req,res)=>{
     const {keyword}=req.query;
     const temp=[];
     searcharticle.forEach((x)=>{
-        const words=x.art.split(" ");
+        const words=x.art.content.split(" ");
         if(x.title==keyword){
             temp.push(x.art);
         }else{
